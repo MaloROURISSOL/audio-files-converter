@@ -13,31 +13,43 @@ class App:
         self.files_to_convert = []
 
         # Widgets
+        self.header_label1 = Label(self.root, text="Convertisseur de fichiers audio", font=("Arial", 16), anchor='center')
+        self.header_label1.grid(row=0, column=0, sticky='ew', padx=15, pady=5)
+        self.header_label2 = Label(self.root, text="Sélectionnez un ou plusieurs fichiers audio, choisissez le nouveau format, choisissez où enregistrer votre sélection et convertissez !", font=("Arial", 11))
+        self.header_label2.grid(row=1, column=0, sticky='ew', padx=10, pady=5)
+
         self.select_button = ttk.Button(self.root, text="Sélectionner des fichiers audio", command=self.select_files)
-        self.select_button.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
+        self.select_button.grid(row=2, column=0, sticky='ew', padx=10, pady=10)
 
         self.listbox = Listbox(self.root)
-        self.listbox.grid(row=1, column=0, sticky='nsew', padx=10)
+        self.listbox.grid(row=3, column=0, sticky='nsew', padx=10)
 
         self.delete_button = ttk.Button(self.root, text="Retirer le fichier sélectionné", command=self.delete_file)
-        self.delete_button.grid(row=2, column=0, sticky='ew', padx=10, pady=10)
+        self.delete_button.grid(row=4, column=0, sticky='ew', padx=10, pady=10)
 
         self.label = Label(self.root, text="Convertir les fichiers en :")
-        self.label.grid(row=3, column=0, sticky='w', padx=10)
+        self.label.grid(row=5, column=0, sticky='w', padx=10)
 
         self.format_combobox = ttk.Combobox(self.root, values=["mp3", "wav", "aiff", "flac", "ogg"], state="readonly")
-        self.format_combobox.grid(row=3, column=0, sticky='e', padx=10)
+        self.format_combobox.grid(row=5, column=0, sticky='e', padx=10)
         self.format_combobox.set("mp3")  # Set default value
 
         self.convert_button = ttk.Button(self.root, text="Convertir", command=self.start_conversion)
-        self.convert_button.grid(row=4, column=0, sticky='ew', padx=10, pady=10)
+        self.convert_button.grid(row=6, column=0, sticky='ew', padx=10, pady=10)
 
         self.progress = ttk.Progressbar(self.root, orient=HORIZONTAL, length=100, mode='determinate')
-        self.progress.grid(row=5, column=0, sticky='ew', padx=10, pady=10)
+        self.progress.grid(row=7, column=0, sticky='ew', padx=10, pady=10)
 
         # Configure the grid to expand properly
-        self.root.grid_rowconfigure(1, weight=1)
+        self.root.grid_rowconfigure(3, weight=1)  # This will allow the Listbox to expand
         self.root.grid_columnconfigure(0, weight=1)
+
+        self.root.bind('<Configure>', self.update_wraplength)
+
+
+    def update_wraplength(self, event):
+        self.header_label1.config(wraplength=event.width - 20)
+        self.header_label2.config(wraplength=event.width - 20)
 
     def select_files(self):
         files = filedialog.askopenfilenames(initialdir = "/", title = "Sélectionnez des fichiers audio", filetypes = (("audio files", "*.*"), ("all files", "*.*")))
@@ -89,8 +101,8 @@ class App:
 root = Tk()
 style = ThemedStyle(root)
 style.set_theme("arc")
-root.geometry("350x400")  # Set the window size
-root.minsize(350, 400)
-root.title("Convertisseur de fichier audio")
+root.geometry("480x500")  # Set the window size
+root.minsize(480, 500)
+root.title("Convertisseur de fichiers audio")
 app = App(root)
 root.mainloop()
